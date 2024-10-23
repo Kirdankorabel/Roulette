@@ -1,12 +1,16 @@
+using Model;
 using TMPro;
 using UnityEngine;
 
-public class CasinoView : MonoBehaviour
+namespace View
 {
-    [SerializeField] private TMP_Text text;
-
-    public void SetModel(CasinoModel model)
+    public class CasinoView : MonoBehaviour
     {
-        model.OnBalanceChanged += (value) => text.text = value.ToString();
+        [SerializeField] private TMP_Text text;
+
+        public void UpdateText(int value)
+        {
+            text.text = value.ToString();
+        }
     }
 }

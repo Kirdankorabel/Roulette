@@ -1,9 +1,17 @@
-public class ChipPool : Pool<Chip>
+using UnityEngine;
+
+namespace View
 {
-    protected override Chip InstantiateItem()
+    public class ChipPool : Pool<Chip>
     {
-        var item = base.InstantiateItem();
-        item.OnChipDisabled += ReleaseItem;
-        return item;
+        [SerializeField] private float _defaultScreenheigh = 1080;
+
+        protected override Chip InstantiateItem()
+        {
+            var item = base.InstantiateItem();
+            item.OnChipDisabled += ReleaseItem;
+            item.transform.localScale = Vector3.one * Screen.height / _defaultScreenheigh;
+            return item;
+        }
     }
 }

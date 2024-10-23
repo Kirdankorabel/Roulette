@@ -1,32 +1,37 @@
+using Model;
 using System.Collections;
 using UnityEngine;
+using View;
 
-public abstract class PlayerBase : MonoBehaviour
+namespace Controller
 {
-    protected PlayerModel _playerModel;
-    protected PlayerView _playerView;
-
-    public string PlayerName => _playerModel.Name;
-
-    protected int chosenNumber = -1;
-
-    public abstract event System.Action<BetModel> OnBet;
-
-    public void SetPlayerModel(PlayerModel model)
+    public abstract class PlayerBase : MonoBehaviour
     {
-        _playerModel = model;
-    }
+        protected PlayerModel _playerModel;
+        protected PlayerView _playerView;
 
-    public void SetView(PlayerView view)
-    {
-        view.UpdateView(PlayerName, _playerModel.Balance);
-        _playerModel.OnBalanceChanged += view.UpdateBalance;
-    }
+        public string PlayerName => _playerModel.Name;
 
-    public void AddMoney(int count)
-    {
-        _playerModel.AddMoney(count);
-    }
+        protected int chosenNumber = -1;
 
-    public abstract IEnumerator TakeTurnCoroutine();
+        public abstract event System.Action<BetModel> OnBet;
+
+        public void SetPlayerModel(PlayerModel model)
+        {
+            _playerModel = model;
+        }
+
+        public void SetView(PlayerView view)
+        {
+            view.UpdateView(PlayerName, _playerModel.Balance);
+            _playerModel.OnBalanceChanged += view.UpdateBalance;
+        }
+
+        public void AddMoney(int count)
+        {
+            _playerModel.AddMoney(count);
+        }
+
+        public abstract IEnumerator TakeTurnCoroutine();
+    }
 }

@@ -1,34 +1,37 @@
 using UnityEngine;
 
-[System.Serializable]
-public class BetModel
+namespace Model
 {
-    [SerializeField] private string playerId;
-    [SerializeField] private int target;
-    [SerializeField] private int count;
-    [SerializeField] private int spinResult = -1;
-    [SerializeField] private int winningMoney;
-
-    public string PlayerName => playerId;
-    public int Target => target; 
-    public int Count => count; 
-    public int SpinResult
+    [System.Serializable]
+    public class BetModel
     {
-        get => spinResult;
-        set => spinResult = spinResult == -1 ? value : spinResult;
-    }
-    public int WinningMoney
-    {
-        get => winningMoney;
-        set => winningMoney = value;
-    }
+        [SerializeField] private string playerId;
+        [SerializeField] private int target;
+        [SerializeField] private int count;
+        [SerializeField] private int spinResult = -1;
+        [SerializeField] private int winningMoney;
 
-    public BetModel() { }
+        public string PlayerName => playerId;
+        public int Target => target;
+        public int Count => count;
+        public int SpinResult
+        {
+            get => spinResult;
+            set => spinResult = spinResult == -1 ? value : spinResult;
+        }
+        public int WinningMoney
+        {
+            get => winningMoney;
+            set => winningMoney = value;
+        }
 
-    public BetModel(string playerId, int target, int count)
-    {
-        this.playerId = playerId;
-        this.target = target;
-        this.count = count;
+        public BetModel() { }
+
+        public BetModel(string playerId, int target, int count)
+        {
+            this.playerId = playerId;
+            this.target = target;
+            this.count = count;
+        }
     }
 }

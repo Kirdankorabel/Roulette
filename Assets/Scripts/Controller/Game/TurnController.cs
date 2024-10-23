@@ -1,73 +1,78 @@
+using Model;
 using UnityEngine;
+using View;
 
-public class TurnController : MonoBehaviour
+namespace Controller
 {
-    [SerializeField] private GameUI _gameUI;
-    [SerializeField] private BetView _betView;
-    [SerializeField] private CasinoView _casinoView;
-    [SerializeField] private ResultView _resultView;
-    [SerializeField] private string _dataName = "Sectors";
-
-    private BetController _betController;
-    private int currentPlayerIndex = 0;
-
-
-    void Start()
+    public class TurnController : MonoBehaviour
     {
-        Initialize();
-        _gameUI.OnSpinEnded += EndRound;
-    }
+        [SerializeField] private GameUI _gameUI;
+        [SerializeField] private BetView _betView;
+        [SerializeField] private CasinoView _casinoView;
+        [SerializeField] private ResultView _resultView;
+        [SerializeField] private string _dataName = "Sectors";
 
-    public void StartGame()
-    {
-        PlayerManager.PlayerControllers.ForEach(player => player.OnBet += PlayerBetHeandler);
-        currentPlayerIndex = 0;
-        StartNexTurn();
-        _betController.Reset();
-    }
+        private BetController _betController;
+        private int currentPlayerIndex = 0;
 
-    private void EndRound()
-    {
-        var result = RollController.LastResult;
-        _betController.EndTurn(result);
-        _betView.EnableMarkers(false);
-        _resultView.Open(DataManager.GetData(_dataName)[result], _betController.GetVinners(result));
-        StartNexTurn();
-    }
 
-    private void Initialize()
-    {
-        var casino = new CasinoModel();
-        _casinoView.SetModel(casino);
-        _betController = new BetController(_betView, casino);
-    }
-
-    private void PlayerBetHeandler(BetModel betModel)
-    {
-        _betView.ShowBet(betModel);
-        _betController.AddBet(betModel);
-        StartNexTurn();
-    }
-
-    private void StartNexTurn()
-    {
-        if (currentPlayerIndex < PlayerManager.PlayerControllers.Count)
+        void Start()
         {
-            if (PlayerManager.PlayerControllers[currentPlayerIndex] is Player)
+            Initialize();
+            _gameUI.OnSpinEnded += EndRound;
+        }
+
+        public void StartGame()
+        {
+            PlayerManager.PlayerControllers.ForEach(player => player.OnBet += PlayerBetHeandler);
+            currentPlayerIndex = 0;
+            StartNexTurn();
+            _betController.Reset();
+        }
+
+        private void EndRound()
+        {
+            var result = RollController.LastResult;
+            _betController.EndTurn(result);
+            _betView.EnableMarkers(false);
+            _resultView.Open(DataManager.GetData(_dataName)[result], _betController.GetVinners(result));
+            StartNexTurn();
+        }
+
+        private void Initialize()
+        {
+            var casino = new CasinoModel();
+            casino.OnBalanceChanged += _casinoView.UpdateText;
+            _betController = new BetController(_betView, casino);
+        }
+
+        private void PlayerBetHeandler(BetModel betModel)
+        {
+            _betView.ShowBet(betModel);
+            _betController.AddBet(betModel);
+            StartNexTurn();
+        }
+
+        private void StartNexTurn()
+        {
+            if (currentPlayerIndex < PlayerManager.PlayerControllers.Count)
             {
-                _gameUI.ResetUIForPlayer(PlayerManager.PlayerControllers[currentPlayerIndex] as Player);
+                if (PlayerManager.PlayerControllers[currentPlayerIndex] is Player)
+                {
+                    _gameUI.ResetUIForPlayer(PlayerManager.PlayerControllers[currentPlayerIndex] as Player);
+                }
+                else
+                {
+                    _gameUI.EnableTurnUI();
+                }
+                StartCoroutine(PlayerManager.PlayerControllers[currentPlayerIndex].TakeTurnCoroutine());
+                currentPlayerIndex++;
             }
             else
             {
-                _gameUI.EnableTurnUI();
+                _gameUI.EnableRollButton();
+                currentPlayerIndex = 0;
             }
-            StartCoroutine(PlayerManager.PlayerControllers[currentPlayerIndex].TakeTurnCoroutine());
-            currentPlayerIndex++;
-        }
-        else
-        {
-            _gameUI.EnableRollButton();
-            currentPlayerIndex = 0;
         }
     }
 }

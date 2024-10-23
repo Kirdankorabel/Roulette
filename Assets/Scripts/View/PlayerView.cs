@@ -2,31 +2,34 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerView : MonoBehaviour
+namespace View
 {
-    [SerializeField] private TMP_Text _nameText;
-    [SerializeField] private TMP_Text _balanceText;
-    [SerializeField] private Image _chipImage;
-
-    private string _name;
-
-    public string Name => _name;
-
-    public void UpdateView(string name, int balance)
+    public class PlayerView : MonoBehaviour
     {
-        _name = name;
-        _nameText.text = name;
-        _balanceText.text = balance.ToString();
-        _chipImage.sprite = DataManager.GetChipSprite();
-    }
+        [SerializeField] private TMP_Text _nameText;
+        [SerializeField] private TMP_Text _balanceText;
+        [SerializeField] private Image _chipImage;
 
-    public Vector3 GetChipPosition()
-    {
-        return _chipImage.transform.position;
-    }
+        private string _name;
 
-    public void UpdateBalance(int balance)
-    {
-        _balanceText.text = balance.ToString();
+        public string Name => _name;
+
+        public void UpdateView(string name, int balance)
+        {
+            _name = name;
+            _nameText.text = name;
+            _balanceText.text = balance.ToString();
+            _chipImage.sprite = DataManager.GetChipSprite();
+        }
+
+        public Vector3 GetChipPosition()
+        {
+            return _chipImage.transform.position;
+        }
+
+        public void UpdateBalance(int balance)
+        {
+            _balanceText.text = balance.ToString();
+        }
     }
 }

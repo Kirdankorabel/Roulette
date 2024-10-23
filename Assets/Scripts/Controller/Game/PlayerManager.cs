@@ -1,28 +1,33 @@
+using Model;
 using System.Collections.Generic;
 using UnityEngine;
+using View;
 
-public class PlayerManager : MonoBehaviour
+namespace Controller
 {
-    public static List<PlayerBase> PlayerControllers;
-
-    [SerializeField] private PlayerFactory _playerFactory;
-    [SerializeField] private PlayersPanel _playersPanel;
-
-    public static int GetPlayerColor(string playerName)
+    public class PlayerManager : MonoBehaviour
     {
-        return PlayerControllers.FindIndex(p => p.PlayerName == playerName);
-    }
+        public static List<PlayerBase> PlayerControllers;
 
-    public void CreatePlayers(int totalPlayerCount, int playerCount)
-    {
-        var counter = 0;
-        var playerModels = PlayerModelFactory.CreatePlayers(totalPlayerCount, playerCount);
-        if(PlayerControllers != null && PlayerControllers.Count > 0)       
+        [SerializeField] private PlayerFactory _playerFactory;
+        [SerializeField] private PlayersPanel _playersPanel;
+
+        public static int GetPlayerColor(string playerName)
         {
-            PlayerControllers.ForEach(p => _playerFactory.DestroyPlayer(p));
-            _playersPanel.DestroyViews();
+            return PlayerControllers.FindIndex(p => p.PlayerName == playerName);
         }
-        PlayerControllers = _playerFactory.CreatePlayers(playerModels);
-        PlayerControllers.ForEach(p => p.SetView(_playersPanel.GetPlayerView(counter++)));
+
+        public void CreatePlayers(int totalPlayerCount, int playerCount)
+        {
+            var counter = 0;
+            var playerModels = PlayerModelFactory.CreatePlayers(totalPlayerCount, playerCount);
+            if (PlayerControllers != null && PlayerControllers.Count > 0)
+            {
+                PlayerControllers.ForEach(p => _playerFactory.DestroyPlayer(p));
+                _playersPanel.DestroyViews();
+            }
+            PlayerControllers = _playerFactory.CreatePlayers(playerModels);
+            PlayerControllers.ForEach(p => p.SetView(_playersPanel.GetPlayerView(counter++)));
+        }
     }
 }

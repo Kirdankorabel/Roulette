@@ -1,18 +1,21 @@
 using UnityEngine;
 
-public class RollController : MonoBehaviour
+namespace Controller
 {
-    [SerializeField] private string _dataName = "Sectors";
-
-    private static int _lastResult;
-
-    public event System.Action<int> OnRolled;
-
-    public static int LastResult => _lastResult;
-
-    public void Roll()
+    public class RollController : MonoBehaviour
     {
-        _lastResult = Random.Range(0, DataManager.GetData(_dataName).Count);
-        OnRolled?.Invoke(_lastResult);
+        [SerializeField] private string _dataName = "Sectors";
+
+        private static int _lastResult;
+
+        public event System.Action<int> OnRolled;
+
+        public static int LastResult => _lastResult;
+
+        public void Roll()
+        {
+            _lastResult = Random.Range(0, DataManager.GetData(_dataName).Count);
+            OnRolled?.Invoke(_lastResult);
+        }
     }
 }
